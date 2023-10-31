@@ -1,5 +1,6 @@
 package com.example.config;
 
+import com.example.entity.RestBean;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -24,7 +25,7 @@ public class SecurityConfiguration {
         return http
                 .authorizeHttpRequests(conf ->
                         conf.requestMatchers("/api/auth/**").permitAll()
-                        .anyRequest().authenticated()
+                                .anyRequest().authenticated()
                 )
                 .formLogin(conf -> conf.loginProcessingUrl("/api/auth/login")
                         .successHandler(this::onAuthenticationSuccess)
@@ -32,20 +33,25 @@ public class SecurityConfiguration {
                 )
                 .logout(conf -> conf.logoutSuccessHandler(this::onLogoutSuccess))
                 .csrf(AbstractHttpConfigurer::disable)
-                .sessionManagement(conf->conf.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .sessionManagement(conf -> conf.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .build();
     }
+
     public void onAuthenticationSuccess(HttpServletRequest request,
                                         HttpServletResponse response,
                                         Authentication authentication) throws IOException, ServletException {
-        response.getWriter().write("Success");
+        response.setContentType("application/json;charset=utf-8");
+        response.getWriter().write(RestBean.success().asJsonString());
 
     }
+
     public void onAuthenticationFailure(HttpServletRequest request,
                                         HttpServletResponse response,
                                         AuthenticationException exception) throws IOException, ServletException {
-        response.getWriter().write("Fail");
+        response.setContentType("application/json;charset=utf-8");
+        response.getWriter().write(RestBean.failure(401, exception.getMessage()).asJsonString());
     }
+
     public void onLogoutSuccess(HttpServletRequest request,
                                 HttpServletResponse response,
                                 Authentication authentication) throws IOException, ServletException {
