@@ -59,6 +59,7 @@ public class SecurityConfiguration {
         authorizeVO.setRole("");
         authorizeVO.setToken(token);
         authorizeVO.setUsername("小明");
+
         response.getWriter().write(RestBean.success(authorizeVO).asJsonString());
 
     }
