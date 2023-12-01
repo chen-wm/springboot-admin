@@ -1,5 +1,3 @@
 spring:
-  security:
-    jwt:
-      key: absndmgjkropwl
-      expire: 1
+  profiles:
+    active: '@environment@'
