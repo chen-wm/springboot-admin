@@ -12,8 +12,10 @@ public interface AccountService extends IService<Account>, UserDetailsService {
   Account findAccountByNameOrEmail(String text);
   List<Map<String, Object>> getUserList();
 
-  List<Account> addUserList(Account account);
+  String addUserList(Account account);
 
   String deleteUserList();
   String editUserList();
+
+  Map<String, Object> getById(int id);
 }

@@ -16,10 +16,6 @@ public record RestBean<T>(int code, T data, String message) {
         return new RestBean<>(code, null, message);
     }
 
-    public static <T> RestBean<T> unauthorizad(String message) {
-        return failure(401, message);
-    }
-
     public static <T> RestBean<T> forbidden(String message) {
         return failure(403, message);
     }

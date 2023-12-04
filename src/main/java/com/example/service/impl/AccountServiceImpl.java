@@ -22,6 +22,7 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
 
   /**
    * 从数据库中通过用户名或邮箱查找用户详细信息
+   *
    * @param username 用户名
    * @return 用户详细信息
    * @throws UsernameNotFoundException 如果用户未找到则抛出此异常
@@ -30,15 +31,16 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
   public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
     Account account = this.findAccountByNameOrEmail(username);
     System.out.println(account);
-    if(account == null){
+    if (account == null) {
       throw new UsernameNotFoundException("用户名或密码错误");
     }
     return User.withUsername(username).password(account.getPassword()).roles(account.getRole()).build();
   }
+
   @Override
   public Account findAccountByNameOrEmail(String text) {
-    return this.query().eq("username",text).or()
-        .eq("email",text).one();
+    return this.query().eq("username", text).or()
+        .eq("email", text).one();
   }
 
   @Override
@@ -58,19 +60,23 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
   }
 
   @Override
-  public List<Account> addUserList(Account account) {
+  public String addUserList(Account account) {
+    String username = account.getUsername();
     List<Account> list = accountMapper.selectList();
-    Date date = new Date( );
+    for (Account item : list) {
+      if (username.equals(item.getUsername())) return "用户名已存在";
+    }
+    Date date = new Date();
     SimpleDateFormat ft = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
     Account newAccount = new Account();
     newAccount.setEmail(account.getEmail());
     newAccount.setRole(account.getRole());
-    newAccount.setUsername(account.getUsername());
+    newAccount.setUsername(username);
     newAccount.setRegisterTime(account.getRegisterTime());
     newAccount.setRegisterTime(ft.format(date));
     newAccount.setId(0);
     accountMapper.insert(newAccount);
-    return list;
+    return list.toString();
   }
 
   @Override
@@ -80,6 +86,11 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
 
   @Override
   public String editUserList() {
+    return null;
+  }
+
+  @Override
+  public Map<String, Object> getById(int id) {
     return null;
   }
 

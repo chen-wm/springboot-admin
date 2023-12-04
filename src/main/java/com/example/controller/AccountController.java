@@ -23,8 +23,9 @@ public class AccountController {
   }
 
   @PostMapping("/add")
-  String addUserList(@Valid @RequestBody Account account) {
-    List<Account> accountList = accountService.addUserList(account);
+  String addUserList(@Valid @RequestParam Account account) {
+    System.out.println("5555"+account);
+    String accountList = accountService.addUserList(account);
     return RestBean.success(accountList).asJsonString();
   }
 }
