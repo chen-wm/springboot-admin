@@ -5,7 +5,7 @@ import com.alibaba.fastjson2.JSONWriter;
 
 public record RestBean<T>(int code, T data, String message) {
     public static <T> RestBean<T> success(T data) {
-        return new RestBean<>(200, data, "请求成功");
+        return new RestBean<>(200, data, "操作成功");
     }
 
     public static <T> RestBean<T> success() {
@@ -14,6 +14,9 @@ public record RestBean<T>(int code, T data, String message) {
 
     public static <T> RestBean<T> failure(int code, String message) {
         return new RestBean<>(code, null, message);
+    }
+    public static <T> RestBean<T> failure(String message) {
+        return new RestBean<>(502, null, message);
     }
 
     public static <T> RestBean<T> forbidden(String message) {

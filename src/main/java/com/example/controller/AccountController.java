@@ -5,6 +5,7 @@ import com.example.entity.dto.Account;
 import com.example.service.AccountService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,9 +24,36 @@ public class AccountController {
   }
 
   @PostMapping("/add")
-  String addUserList(@Valid @RequestParam Account account) {
-    System.out.println("5555"+account);
-    String accountList = accountService.addUserList(account);
-    return RestBean.success(accountList).asJsonString();
+  String addUserList(@Valid @RequestBody Account account, BindingResult bindingResult) {
+    if (bindingResult.hasErrors()) {
+      IllegalArgumentException illegalArgumentException = new IllegalArgumentException(bindingResult.getAllErrors().get(0).getDefaultMessage());
+      return RestBean.failure(String.valueOf(illegalArgumentException)).asJsonString();
+    }
+    String s = accountService.addUserList(account);
+    if (s != null) {
+      return RestBean.success(null).asJsonString();
+    }
+    return RestBean.failure("用户名已经存在").asJsonString();
+  }
+
+  @PostMapping("/delete")
+  String deleteById(@Valid @RequestBody int id, BindingResult bindingResult){
+    System.out.println("!!!!!"+id);
+    if (bindingResult.hasErrors()) {
+      IllegalArgumentException illegalArgumentException = new IllegalArgumentException(bindingResult.getAllErrors().get(0).getDefaultMessage());
+      return RestBean.failure(String.valueOf(illegalArgumentException)).asJsonString();
+    }
+    accountService.deleteUser(id);
+    return RestBean.success(null).asJsonString();
+  }
+
+  @PutMapping("/update")
+  String deleteById(@Valid @RequestBody Account account, BindingResult bindingResult){
+    if (bindingResult.hasErrors()) {
+      IllegalArgumentException illegalArgumentException = new IllegalArgumentException(bindingResult.getAllErrors().get(0).getDefaultMessage());
+      return RestBean.failure(String.valueOf(illegalArgumentException)).asJsonString();
+    }
+    accountService.updateUser(account);
+    return RestBean.success(null).asJsonString();
   }
 }

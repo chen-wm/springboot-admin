@@ -8,11 +8,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
+
+import static com.example.utils.Const.DEFAULT_DATETIME_FORMAT;
 
 @Service
 @RestController
@@ -64,34 +67,39 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
     String username = account.getUsername();
     List<Account> list = accountMapper.selectList();
     for (Account item : list) {
-      if (username.equals(item.getUsername())) return "用户名已存在";
+      if (username.equals(item.getUsername())) return null;
     }
     Date date = new Date();
-    SimpleDateFormat ft = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+    String ft = new SimpleDateFormat(DEFAULT_DATETIME_FORMAT).format(date);
     Account newAccount = new Account();
     newAccount.setEmail(account.getEmail());
+    BCryptPasswordEncoder BCryptPasswordEncoder = new BCryptPasswordEncoder();
+    String encodePwd = BCryptPasswordEncoder.encode(account.getPassword());
+    newAccount.setPassword(encodePwd);
     newAccount.setRole(account.getRole());
     newAccount.setUsername(username);
-    newAccount.setRegisterTime(account.getRegisterTime());
-    newAccount.setRegisterTime(ft.format(date));
+    newAccount.setRegisterTime(ft);
     newAccount.setId(0);
     accountMapper.insert(newAccount);
     return list.toString();
   }
 
   @Override
-  public String deleteUserList() {
-    return null;
+  public void deleteUser(int id) {
+    accountMapper.deleteById(id);
   }
 
   @Override
-  public String editUserList() {
-    return null;
+  public void updateUser(Account account) {
+    Account account1 = new Account();
+    account1.setRole(account.getRole());
+    account1.setUsername(account.getUsername());
+    account1.setEmail(account.getEmail());
+    BCryptPasswordEncoder BCryptPasswordEncoder = new BCryptPasswordEncoder();
+    String encodePwd = BCryptPasswordEncoder.encode(account.getPassword());
+    account1.setPassword(encodePwd);
+    account1.setId(account.getId());
+    System.out.println("account1"+account1);
+    accountMapper.updateById(account1);
   }
-
-  @Override
-  public Map<String, Object> getById(int id) {
-    return null;
-  }
-
 }

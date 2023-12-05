@@ -41,3 +41,5 @@ spring:
       methods: '*'
 server:
   port: 80
+  error:
+    include-binding-errors: always

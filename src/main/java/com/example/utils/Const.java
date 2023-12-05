@@ -22,5 +22,6 @@ public final class Const {
     public final static String MQ_MAIL = "mail";
     //用户角色
     public final static String ROLE_DEFAULT = "user";
+    public final static String  DEFAULT_DATETIME_FORMAT= "yyyy-MM-dd hh:mm:ss";
 
 }
