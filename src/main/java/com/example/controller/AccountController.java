@@ -37,18 +37,12 @@ public class AccountController {
   }
 
   @PostMapping("/delete")
-  String deleteById(@Valid @RequestBody int id, BindingResult bindingResult){
-    System.out.println("!!!!!"+id);
-    if (bindingResult.hasErrors()) {
-      IllegalArgumentException illegalArgumentException = new IllegalArgumentException(bindingResult.getAllErrors().get(0).getDefaultMessage());
-      return RestBean.failure(String.valueOf(illegalArgumentException)).asJsonString();
-    }
-    accountService.deleteUser(id);
-    return RestBean.success(null).asJsonString();
+  String deleteById(@RequestParam("id") Integer id){
+    return accountService.deleteUser(id);
   }
 
-  @PutMapping("/update")
-  String deleteById(@Valid @RequestBody Account account, BindingResult bindingResult){
+  @PostMapping("/update")
+  String update(@Valid @RequestBody Account account, BindingResult bindingResult){
     if (bindingResult.hasErrors()) {
       IllegalArgumentException illegalArgumentException = new IllegalArgumentException(bindingResult.getAllErrors().get(0).getDefaultMessage());
       return RestBean.failure(String.valueOf(illegalArgumentException)).asJsonString();

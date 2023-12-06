@@ -1,6 +1,7 @@
 package com.example.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.example.entity.RestBean;
 import com.example.entity.dto.Account;
 import com.example.mapper.AccountMapper;
 import com.example.service.AccountService;
@@ -85,8 +86,12 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
   }
 
   @Override
-  public void deleteUser(int id) {
+  public String deleteUser(Integer id) {
+    if(id == null) {
+      return RestBean.failure("id不能为空").asJsonString();
+    }
     accountMapper.deleteById(id);
+    return RestBean.success(null).asJsonString();
   }
 
   @Override
@@ -99,7 +104,6 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
     String encodePwd = BCryptPasswordEncoder.encode(account.getPassword());
     account1.setPassword(encodePwd);
     account1.setId(account.getId());
-    System.out.println("account1"+account1);
     accountMapper.updateById(account1);
   }
 }

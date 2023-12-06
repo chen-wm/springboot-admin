@@ -14,7 +14,7 @@ public interface AccountService extends IService<Account>, UserDetailsService {
 
   String addUserList(Account account);
 
-  void deleteUser(int id);
+  String deleteUser(Integer id);
   void updateUser(Account account);
 
 }
